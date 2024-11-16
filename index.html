@@ -35,12 +35,12 @@
         .turntable {
             position: absolute; /* 绝对定位 */
             top: 30%; /* 距离顶部30% */
-            left: 50%; /* 距离左侧50% */
+            left: calc(min(30%, 50vw - (50vh * 0.5))); /* 动态计算左侧位置 */
             width: calc(min(70vw, 50vh)); /* 黑胶宽度不超过屏幕宽度的70%或屏幕高度的50% */
             height: calc(min(70vw, 50vh)); /* 黑胶高度与宽度相同，保持正圆 */
             background-image: url('heijiao.png'); /* 黑胶图片 */
             background-size: cover; /* 图片覆盖整个元素 */
-            opacity: 1; /* 设置黑胶的透明度 */
+            opacity: 0.9; /* 设置黑胶的透明度 */
             animation: none; /* 默认不旋转 */
             transform: translate(-50%, -50%); /* 将元素中心对齐到父元素中心 */
             border-radius: 50%; /* 使黑胶为圆形 */
