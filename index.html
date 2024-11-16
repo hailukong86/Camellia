@@ -56,65 +56,77 @@
             height: 100%; /* 播放器高度为100% */
         }
 
-        progress {
-            width: 100%; /* 进度条宽度为100% */
-            height: 20px; /* 进度条高度 */
-            margin-top: 20px; /* 上边距 */
-            display: none; /* 初始隐藏进度条 */
+        .loading-spinner {
+            display: none; /* 初始隐藏加载提示 */
+            margin-top: 20px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
         }
 
-        @keyframes rotate {
-            from {
-                transform: translate(-50%, -50%) rotate(0deg); /* 从0度开始 */
-            }
-            to {
-                transform: translate(-50%, -50%) rotate(360deg); /* 旋转到360度 */
-            }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-message {
+            display: none; /* 初始隐藏加载提示 */
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #fff;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="turntable" id="turntable"></div> <!-- 添加旋转的黑胶 -->
-        <h1>Camellia</h1>
-        <div class="audio-container">
-            <audio id="audio" controls>
-                <source id="audio-source" src="Camellia.mp3" type="audio/mpeg">
-                您的浏览器不支持音频元素。
-            </audio>
-        </div>
-        <progress id="loading-bar" value="0" max="100"></progress> <!-- 加载进度条 -->
+<div class="container">
+    <div class="turntable" id="turntable"></div> <!-- 添加旋转的黑胶 -->
+    <h1>Camellia</h1>
+    <div class="audio-container">
+        <audio id="audio" controls preload="auto">
+            <source id="audio-source" src="Camellia.mp3" type="audio/mpeg">
+            您的浏览器不支持音频元素。
+        </audio>
     </div>
+    <div class="loading-spinner" id="loading-spinner"></div> <!-- 加载旋转圈圈 -->
+    <div class="loading-message" id="loading-message">正在加载音频，请稍候...</div>
+</div>
 
-    <script>
-        const audio = document.getElementById('audio');
-        const turntable = document.getElementById('turntable');
-        const loadingBar = document.getElementById('loading-bar');
+<script>
+    const audio = document.getElementById('audio');
+    const turntable = document.getElementById('turntable');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const loadingMessage = document.getElementById('loading-message');
 
-        // 监听音频的加载进度
-        audio.addEventListener('loadstart', () => {
-            loadingBar.style.display = 'block'; // 显示进度条
-        });
+    // 监听音频的加载进度
+    audio.addEventListener('loadstart', () => {
+        loadingSpinner.style.display = 'block'; // 显示加载旋转圈圈
+        loadingMessage.style.display = 'block'; // 显示加载提示
+    });
 
-        audio.addEventListener('progress', () => {
-            if (audio.buffered.length > 0) {
-                const percent = (audio.buffered.end(0) / audio.duration) * 100; // 计算加载百分比
-                loadingBar.value = percent; // 更新进度条
-            }
-        });
+    audio.addEventListener('progress', () => {
+        if (audio.buffered.length > 0) {
+            const percent = (audio.buffered.end(0) / audio.duration) * 100; // 计算加载百分比
+            console.log(`加载进度: ${percent}%`);
+        }
+    });
 
-        audio.addEventListener('canplaythrough', () => {
-            loadingBar.style.display = 'none'; // 隐藏进度条
-        });
+    audio.addEventListener('canplaythrough', () => {
+        loadingSpinner.style.display = 'none'; // 隐藏加载旋转圈圈
+        loadingMessage.style.display = 'none'; // 隐藏加载提示
+        audio.controls = true; // 显示控制条
+    });
 
-        // 监听音频的播放和暂停事件
-        audio.addEventListener('play', () => {
-            turntable.style.animation = "rotate 10s linear infinite"; // 开始旋转
-        });
+    // 监听音频的播放和暂停事件
+    audio.addEventListener('play', () => {
+        turntable.style.animation = "rotate 10s linear infinite"; // 开始旋转
+    });
 
-        audio.addEventListener('pause', () => {
-            turntable.style.animation = "none"; // 停止旋转
-        });
-    </script>
+    audio.addEventListener('pause', () => {
+        turntable.style.animation = "none"; // 停止旋转
+    });
+</script>
 </body>
 </html>
